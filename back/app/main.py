@@ -74,8 +74,13 @@ def download_video(url: str, formato: str):
             "format": "bestvideo+bestaudio[ext=m4a]/best[ext=mp4]",
             "outtmpl": ruta
         }
+        
+    if url.startswith("http://") or url.startswith("https://"):
+        objetivo = [url]
+    else:   
+        objetivo = [f"ytsearch1:{url}"]
 
-    objetivo = [url if url.startswith("http") else f"ytsearch1:{url}"]
+    
 
     with yt_dlp.YoutubeDL(opciones) as ydl:
         info = ydl.extract_info(objetivo, download=True)
