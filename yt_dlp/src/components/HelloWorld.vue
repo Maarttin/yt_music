@@ -32,11 +32,15 @@
         },
         responseType: 'blob' // importante para descargar archivos
       })
-     const blob = new Blob([response.data], { type: "audio/mpeg" });
+
+      const mimeType = formato.value === "mp3" ? "audio/mpeg" : "video/mp4"; 
+      const fileName = formato.value === "mp3" ? "musica.mp3" : "video.mp4";
+
+     const blob = new Blob([response.data], { type: mimeType });
 const enlace = document.createElement("a");
 enlace.href = URL.createObjectURL(blob);
 // el nombre lo pone el backend automáticamente
-enlace.download = "musica.mp3";
+enlace.download = fileName;
 document.body.appendChild(enlace);
 enlace.click();
 document.body.removeChild(enlace);
