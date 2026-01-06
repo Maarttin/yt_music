@@ -29,13 +29,17 @@
         params: {
           url: url.value,
           formato: formato.value
-        }
+        },
+        responseType: 'blob' // importante para descargar archivos
       })
      const blob = new Blob([response.data], { type: "audio/mpeg" });
 const enlace = document.createElement("a");
 enlace.href = URL.createObjectURL(blob);
 // el nombre lo pone el backend automáticamente
+enlace.download = "musica.mp3";
+document.body.appendChild(enlace);
 enlace.click();
+document.body.removeChild(enlace);
 URL.revokeObjectURL(enlace.href);
       
      // alert("Descarga iniciada")
