@@ -7,11 +7,11 @@ RUN apt-get update && apt-get install -y ffmpeg
 WORKDIR /app
 
 # Copiar requirements e instalar
-COPY requirements.txt .
+COPY back/app/requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copiar el resto del código
-COPY . .
+# Copiar el resto del backend
+COPY back/app/ .
 
 # Comando de arranque
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "${PORT}"]
