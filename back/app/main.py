@@ -6,6 +6,7 @@ from fastapi.responses import FileResponse
 import yt_dlp
 import os
 import platform
+import uvicorn
 
 app = FastAPI()
 
@@ -87,3 +88,7 @@ def download_video(url: str, formato: str):
         media_type="audio/mpeg" if formato == "mp3" else "video/mp4",
         filename=os.path.basename(filename)
     )
+
+if __name__ == "__main__": 
+    port = int(os.environ.get("PORT", 8080)) 
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
