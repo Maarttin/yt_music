@@ -34,14 +34,7 @@
       })
      
       let fileName;
-       const disposition = response.headers["content-disposition"]; 
-       if (disposition && disposition.includes("filename=")) { 
-        fileName = disposition 
-        .split("filename=")[1] .trim() 
-        .replace(/"/g, ""); // quitar comillas
-         } else { 
-          // fallback si no viene el header 
-          fileName = `cancion.${formato.value}`; }
+       fileName = resultado.value ? `${resultado.value['title']}.${formato.value}` : `download.${formato.value}`;
 
       const mimeType = formato.value === "mp3" ? "audio/mpeg" : "video/mp4"; 
       const blob = new Blob([response.data], { type: mimeType });
