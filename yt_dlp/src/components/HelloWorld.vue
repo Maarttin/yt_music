@@ -3,10 +3,11 @@
   import axios from 'axios'
 
   const url = ref('')
-  const titulo = ref('')
-  const formato = ref('')
+  const formato = ref('mp3')
   const errorMsg = ref('')
- let resultado :any = ""
+  const resultado = ref<any>(null)  
+ 
+
 
   const buscarCancion = async () => {
     try {
@@ -15,7 +16,7 @@
           url: url.value
         }
       } )
-      resultado = res.data
+      resultado.value = res.data
     }catch (error) {
       console.error(error)
       resultado.value = 'Error al buscar la canción'
@@ -38,18 +39,20 @@
     }
   }
 
+  
+
 
 </script>
 
 <template>
   <h1>Bienvenido</h1>
-  <h2>Comienza buscando algún video</h2>
+  <h2>Comienza buscando algún video por nombre o URL</h2>
 
 
   <input type="text" v-model="url" placeholder="URL del video" />
 <button @click="buscarCancion">Buscar</button>
 
-<p v-if="titulo">Cancion encontrada: {{ titulo }}</p>
+<p v-if="resultado">Cancion encontrada: {{ resultado['title'] }}</p>
 <p v-if="errorMsg" style="color: red;">{{ errorMsg }}</p>
 
 
@@ -65,8 +68,11 @@
   </div>
 
 
-  <p>{{ resultado.title}}</p>
+ 
 </template>
+
+
+
 
 <style scoped>
 .read-the-docs {

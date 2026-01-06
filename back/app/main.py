@@ -30,13 +30,18 @@ def obtener_ruta():
         
     return ruta_descargas
 
-downdir = "./downloads/"
+
 @app.get("/information")
 def get_video(url: str = Query(..., description="URL video")):
     ydl = {"quiet": True, "skip_download": True}
+    if url.startswith("http://") or url.startswith("https://"):
+        objetivo = url
+    else:
+        objetivo = f"ytsearch1:{url}"
+        
     with yt_dlp.YoutubeDL(ydl) as ydl:
         try:
-            info = ydl.extract_info(url, download=False)
+            info = ydl.extract_info(objetivo, download=False)
             return {
                 "title": info.get("title"),
                 "duration": info.get("duration"),
@@ -66,9 +71,15 @@ def download_video(url: str = Query(..., description="URL video"), formato: str 
         }
     else:
         raise ValueError("Formato no soportado")
+    
+    if url.startswith("http://") or url.startswith("https://"):
+        objetivo = [url]
+    else:
+        objetivo = [f"ytsearch1:{url}"]
+        
 
     with yt_dlp.YoutubeDL(opciones) as ydl:
-        ydl.download([url])
+        ydl.download(objetivo)
     return {"status": "ok", "formato": formato}
 
 
