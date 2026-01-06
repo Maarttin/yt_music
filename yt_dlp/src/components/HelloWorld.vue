@@ -25,12 +25,13 @@
 
   const descargarCancion = async () => {
     try{
-      await axios.get(`https://ytmusic-production.up.railway.app/download`,{
+      const response =await axios.get(`https://ytmusic-production.up.railway.app/download`,{
         params: {
           url: url.value,
           formato: formato.value
         }
       })
+      const blob = new Blob([response.data], { type: "audio/mpeg" }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "musica.mp3"; // nombre sugerido document.body.appendChild(link); link.click(); document.body.removeChild(link);
      // alert("Descarga iniciada")
     }
     catch (error){
