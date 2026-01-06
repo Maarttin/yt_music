@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 
 import yt_dlp
 import os
@@ -79,7 +80,10 @@ def download_video(url: str = Query(..., description="URL video"), formato: str 
         
 
     with yt_dlp.YoutubeDL(opciones) as ydl:
-        ydl.download(objetivo)
+        info = ydl.extract_info(objetivo[0], download=True) 
+        filename = ydl.prepare_filename(info)
+        if formato == "mp3": 
+            filename = filename.rsplit(".", 1)[0] + ".mp3"
     return FileResponse(filename, media_type="audio/mpeg" if formato=="mp3" else "video/mp4", filename=os.path.basename(filename))
 
 
