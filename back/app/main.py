@@ -52,15 +52,13 @@ def get_video(url: str = Query(..., description="URL video")):
         except Exception as e:
             return JSONResponse(status_code=400, content={"error": str(e)})
         
+
+
+
 @app.get("/download")
-def download_video(url: str = Query(..., description="URL video"), formato: str = Query(..., description="Formato de descarga")):
-    ruta= os.path.join(obtener_ruta(), "%(title)s.%(ext)s")
-    if formato == "mp4":
-        opciones = {
-            "format": "bestvideo+bestaudio[ext=m4a]/best[ext=mp4]",
-            "outtmpl": ruta
-        }
-    elif formato == "mp3":
+def download_video(url: str, formato: str):
+    ruta = os.path.join("/tmp", "%(title)s.%(ext)s")  # usa /tmp en Railway
+    if formato == "mp3":
         opciones = {
             "format": "bestaudio/best",
             "outtmpl": ruta,
@@ -71,19 +69,21 @@ def download_video(url: str = Query(..., description="URL video"), formato: str 
             }]
         }
     else:
-        raise ValueError("Formato no soportado")
-    
-    if url.startswith("http://") or url.startswith("https://"):
-        objetivo = [url]
-    else:
-        objetivo = [f"ytsearch1:{url}"]
-        
+        opciones = {
+            "format": "bestvideo+bestaudio[ext=m4a]/best[ext=mp4]",
+            "outtmpl": ruta
+        }
+
+    objetivo = [url if url.startswith("http") else f"ytsearch1:{url}"]
 
     with yt_dlp.YoutubeDL(opciones) as ydl:
-        info = ydl.extract_info(objetivo[0], download=True) 
+        info = ydl.extract_info(objetivo[0], download=True)
         filename = ydl.prepare_filename(info)
-        if formato == "mp3": 
+        if formato == "mp3":
             filename = filename.rsplit(".", 1)[0] + ".mp3"
-    return FileResponse(filename, media_type="audio/mpeg" if formato=="mp3" else "video/mp4", filename=os.path.basename(filename))
 
-
+    return FileResponse(
+        filename,
+        media_type="audio/mpeg" if formato == "mp3" else "video/mp4",
+        filename=os.path.basename(filename)
+    )
