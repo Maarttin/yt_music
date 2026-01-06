@@ -75,10 +75,10 @@ def download_video(url: str, formato: str):
             "outtmpl": ruta
         }
 
-    objetivo = [url if url.startswith("http") else f"ytsearch1:{url}"]
+    objetivo = url if url.startswith("http") else f"ytsearch1:{url}"
 
     with yt_dlp.YoutubeDL(opciones) as ydl:
-        info = ydl.extract_info(objetivo[0], download=True)
+        info = ydl.extract_info(objetivo, download=True)
         filename = ydl.prepare_filename(info)
         if formato == "mp3":
             filename = filename.rsplit(".", 1)[0] + ".mp3"
