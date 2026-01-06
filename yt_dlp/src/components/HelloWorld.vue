@@ -11,7 +11,7 @@
 
   const buscarCancion = async () => {
     try {
-      const res = await axios.get(`http://localhost:8000/information`,{
+      const res = await axios.get(`https://ytmusic-production.up.railway.app/information`,{
         params: {
           url: url.value
         }
@@ -25,7 +25,7 @@
 
   const descargarCancion = async () => {
     try{
-      await axios.get(`http://localhost:8000/download`,{
+      await axios.get(`https://ytmusic-production.up.railway.app/download`,{
         params: {
           url: url.value,
           formato: formato.value
