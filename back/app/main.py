@@ -80,6 +80,6 @@ def download_video(url: str = Query(..., description="URL video"), formato: str 
 
     with yt_dlp.YoutubeDL(opciones) as ydl:
         ydl.download(objetivo)
-    return {"status": "ok", "formato": formato}
+    return FileResponse(filename, media_type="audio/mpeg" if formato=="mp3" else "video/mp4", filename=os.path.basename(filename))
 
 
