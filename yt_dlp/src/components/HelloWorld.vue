@@ -32,11 +32,18 @@
         },
         responseType: 'blob' // importante para descargar archivos
       })
+      const disposition = response.headers["content-disposition"]; 
+      let fileName = "archivo." + formato.value; // fallback 
+      if (disposition && disposition.includes("filename=")) { 
+        fileName = disposition 
+        .split("filename=")[1]
+         .replace(/"/g, ""); // quitar comillas
+          }
 
       const mimeType = formato.value === "mp3" ? "audio/mpeg" : "video/mp4"; 
-      const fileName = formato.value === "mp3" ? "musica.mp3" : "video.mp4";
+      const blob = new Blob([response.data], { type: mimeType });
 
-     const blob = new Blob([response.data], { type: mimeType });
+ 
 const enlace = document.createElement("a");
 enlace.href = URL.createObjectURL(blob);
 // el nombre lo pone el backend automáticamente
