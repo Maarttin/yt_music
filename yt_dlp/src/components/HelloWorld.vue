@@ -34,7 +34,7 @@
       })
      
       let fileName;
-       fileName = resultado.value ? `${resultado.value['title']}.${formato.value}` : `download.${formato.value}`;
+       fileName = resultado.value['title']
 
       const mimeType = formato.value === "mp3" ? "audio/mpeg" : "video/mp4"; 
       const blob = new Blob([response.data], { type: mimeType });
