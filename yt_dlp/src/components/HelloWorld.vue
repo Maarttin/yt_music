@@ -31,15 +31,12 @@
           formato: formato.value
         }
       })
-      const blob = new Blob([response.data], { type: "audio/mpeg" }); 
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob); 
-      //link.download = "musica.mp3"; // nombre sugerido 
-      document.body.appendChild(link);
-      link.click(); 
-      document.body.removeChild(link);
-      URL.revokeObjectURL(link.href);
-
+     const blob = new Blob([response.data], { type: "audio/mpeg" });
+const enlace = document.createElement("a");
+enlace.href = URL.createObjectURL(blob);
+// el nombre lo pone el backend automáticamente
+enlace.click();
+URL.revokeObjectURL(enlace.href);
       
      // alert("Descarga iniciada")
     }
