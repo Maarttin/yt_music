@@ -31,7 +31,8 @@
           formato: formato.value
         }
       })
-      const blob = new Blob([response.data], { type: "audio/mpeg" }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "musica.mp3"; // nombre sugerido document.body.appendChild(link); link.click(); document.body.removeChild(link);
+      const blob = new Blob([response.data], { type: "audio/mpeg" }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "musica.mp3"; // nombre sugerido 
+      document.body.appendChild(link); link.click(); document.body.removeChild(link);
      // alert("Descarga iniciada")
     }
     catch (error){
