@@ -30,7 +30,7 @@
           formato: formato.value
         }
       })
-      alert("Descarga iniciada")
+     // alert("Descarga iniciada")
     }
     catch (error){
       console.error(error)

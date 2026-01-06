@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import yt_dlp
 import os
+import platform
+
 app = FastAPI()
 
 app.add_middleware(
@@ -14,6 +16,19 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+def obtener_ruta():
+    sistema_operativo = platform.system()
+    if sistema_operativo == "Windows":
+        ruta_descargas = os.path.join(os.path.expanduser("~"), "Downloads")
+    elif sistema_operativo == "Linux":
+        ruta_descargas = os.path.join(os.path.expanduser("~"), "Downloads")
+    elif sistema_operativo == "Darwin":
+        ruta_descargas = os.path.join(os.path.expanduser("~"), "Downloads")
+    else:
+        ruta_descargas = "./downloads/"         
+        
+    return ruta_descargas
 
 downdir = "./downloads/"
 @app.get("/information")
@@ -33,15 +48,16 @@ def get_video(url: str = Query(..., description="URL video")):
         
 @app.get("/download")
 def download_video(url: str = Query(..., description="URL video"), formato: str = Query(..., description="Formato de descarga")):
+    ruta= os.path.join(obtener_ruta(), "%(title)s.%(ext)s")
     if formato == "mp4":
         opciones = {
             "format": "bestvideo+bestaudio[ext=m4a]/best[ext=mp4]",
-            "outtmpl": "%(title)s.%(ext)s"
+            "outtmpl": ruta
         }
     elif formato == "mp3":
         opciones = {
             "format": "bestaudio/best",
-            "outtmpl": "%(title)s.%(ext)s",
+            "outtmpl": ruta,
             "postprocessors": [{
                 "key": "FFmpegExtractAudio",
                 "preferredcodec": "mp3",
