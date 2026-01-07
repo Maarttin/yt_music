@@ -20,6 +20,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["Content-Disposition"],
 )
 
 def obtener_ruta():
@@ -42,7 +43,7 @@ def get_video(url: str = Query(..., description="URL video")):
     if url.startswith("http://") or url.startswith("https://"):
         objetivo = url
     else:
-        objetivo = f"ytsearch1:{url}"
+        objetivo = f"ytsearch:{url}"
         
     with yt_dlp.YoutubeDL(ydl) as ydl:
         try:
@@ -74,10 +75,10 @@ def download_video(url: str, formato: str):
     }
 
     if not url.startswith("http://") and not url.startswith("https://"):
-        url = f"ytsearch1:{url}"
+        url = f"ytsearch:{url}"
 
     with yt_dlp.YoutubeDL(opciones) as ydl:
-        info = ydl.extract_info(url, download=True)
+        info = ydl.extract_info([url], download=True)
         # Ruta real del archivo generado 
         if "requested_downloads" in info and info["requested_downloads"]:
             filename = info["requested_downloads"][0]["filepath"] 
