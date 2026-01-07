@@ -64,15 +64,24 @@ def get_video(url: str = Query(..., description="URL video")):
 def download_video(url: str, formato: str):
     ruta = "/tmp/%(title)s.%(ext)s"
 
-    opciones = {
-        "format": "bestaudio/best" if formato == "mp3" else "bestvideo+bestaudio/best",
-        "outtmpl": ruta,
-        "postprocessors": [{
-            "key": "FFmpegExtractAudio",
-            "preferredcodec": "mp3",
-            "preferredquality": "192",
-        }] if formato == "mp3" else []
-    }
+    if formato == "mp3":
+        opciones = {
+            "format": "bestaudio/best",
+            "outtmpl": ruta,  # ruta donde guardar
+            "postprocessors": [{
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "mp3",
+                "preferredquality": "192",
+            }]
+        }
+    else:
+        opciones = {
+            "format": "bestvideo+bestaudio",
+            "merge_output_format": "mp4",  # fuerza salida mp4
+            "outtmpl": ruta,
+            "postprocessors": [{ "key": "FFmpegVideoConvertor", "preferedformat": "mp4" }]
+        }
+
 
     if not url.startswith("http://") and not url.startswith("https://"):
         url = f"ytsearch:{url}"

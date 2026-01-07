@@ -32,12 +32,19 @@
         },
         responseType: 'blob' // importante para descargar archivos
       })
+
+      console.log(response.headers['content-disposition'])
      
       const disposition = response.headers['content-disposition'];
 let fileName = 'descarga.mp3';
 if (disposition) {
-  const match = disposition.match(/filename="?(.+)"?/);
-  if (match) fileName = match[1].trim();
+  const match = disposition.match(/filename="?([^"]+)"?/);
+  if (match){
+     fileName = match[1]
+     .trim()
+     .replace(/[\u0000-\u001F\u007F]/g, "")
+ .replace(/[\\/*?:"<>|]/g, "_");
+  }
 }
 
 
@@ -48,6 +55,7 @@ if (disposition) {
 const enlace = document.createElement("a");
 enlace.href = URL.createObjectURL(blob);
 // el nombre lo pone el backend automáticamente
+console.log("Nombre del archivo:", fileName);
 enlace.download = fileName;
 document.body.appendChild(enlace);
 enlace.click();
