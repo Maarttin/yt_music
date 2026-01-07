@@ -75,7 +75,7 @@ def download_video(url: str, formato: str):
             "outtmpl": ruta
         }
         
-    if not url.startswith("http://") or not url.startswith("https://"):
+    if not url.startswith("http://") and not url.startswith("https://"):
         url= f"ytsearch1:{url}"
     
     print("url", url, flush=True)
@@ -86,8 +86,7 @@ def download_video(url: str, formato: str):
         info = ydl.extract_info(url, download=True)
         filename = ydl.prepare_filename(info)
         if formato == "mp3":
-            filename = filename.rsplit(".", 1)[0] + ".mp3"
-
+            filename = os.path.splitext(filename)[0] + ".mp3"
     return FileResponse(
         filename,
         media_type="audio/mpeg" if formato == "mp3" else "video/mp4",
