@@ -104,6 +104,7 @@ def download_video(url: str, formato: str):
             filename = ydl.prepare_filename(entry)
             if formato == "mp3":
                 filename = os.path.splitext(filename)[0] + ".mp3" 
+        real_title = entry.get("title", "cancion")
     else: 
         # URL directa 
         if "requested_downloads" in info and info["requested_downloads"]: 
@@ -112,6 +113,7 @@ def download_video(url: str, formato: str):
             filename = ydl.prepare_filename(info)
             if formato == "mp3": 
                 filename = os.path.splitext(filename)[0] + ".mp3"
+        real_title = info.get("title", "cancion")
                 
     print("Archivo real generado:", filename, flush=True)
     print("prepare_filename:", ydl.prepare_filename(info), flush=True)
@@ -125,7 +127,8 @@ def download_video(url: str, formato: str):
     return FileResponse(
         filename,
         media_type="audio/mpeg" if formato == "mp3" else "video/mp4",
-        filename=safe_name
+        filename=f"{real_title}.mp3" if formato == "mp3" else f"{real_title}.mp4"
+        #filename=safe_name
     )
 
 if __name__ == "__main__": 
