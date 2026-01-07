@@ -78,7 +78,7 @@ def download_video(url: str, formato: str):
     if not url.startswith("http://") or not url.startswith("https://"):
         url= f"ytsearch1:{url}"
     
-    print("url", url)
+    print("url", url, flush=True)
 
     
 
