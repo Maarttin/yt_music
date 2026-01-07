@@ -33,8 +33,13 @@
         responseType: 'blob' // importante para descargar archivos
       })
      
-      let fileName;
-       fileName = resultado.value['title']
+      const disposition = response.headers['content-disposition'];
+let fileName = 'descarga.mp3';
+if (disposition) {
+  const match = disposition.match(/filename="?(.+)"?/);
+  if (match) fileName = match[1];
+}
+
 
       const mimeType = formato.value === "mp3" ? "audio/mpeg" : "video/mp4"; 
       const blob = new Blob([response.data], { type: mimeType });
