@@ -78,11 +78,15 @@ def download_video(url: str, formato: str):
 
     with yt_dlp.YoutubeDL(opciones) as ydl:
         info = ydl.extract_info(url, download=True)
-        real_title = info.get("title", "cancion") 
-        ext = "mp3" if formato == "mp3" else info.get("ext", "mp4")
-        filename = ydl.prepare_filename(info)
-        if formato == "mp3":
-           filename = os.path.splitext(filename)[0] + ".mp3"
+        # Ruta real del archivo generado 
+        if "requested_downloads" in info and info["requested_downloads"]:
+            filename = info["requested_downloads"][0]["filepath"] 
+        else: 
+            filename = ydl.prepare_filename(info) 
+            if formato == "mp3": 
+                filename = os.path.splitext(filename)[0] + ".mp3"
+                
+    print("Archivo real generado:", filename, flush=True)
     print("prepare_filename:", ydl.prepare_filename(info), flush=True)
     print("final filename:", filename, flush=True)
 
