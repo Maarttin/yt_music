@@ -78,7 +78,7 @@ def download_video(url: str, formato: str):
         url = f"ytsearch:{url}"
 
     with yt_dlp.YoutubeDL(opciones) as ydl:
-        info = ydl.extract_info([url], download=True)
+        info = ydl.extract_info(url, download=True)
         # Ruta real del archivo generado 
         if "requested_downloads" in info and info["requested_downloads"]:
             filename = info["requested_downloads"][0]["filepath"] 
