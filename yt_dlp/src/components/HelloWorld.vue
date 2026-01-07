@@ -37,15 +37,20 @@
      
       const disposition = response.headers['content-disposition'];
 let fileName = 'descarga.mp3';
-if (disposition) {
-  const match = disposition.match(/filename="?([^"]+)"?/);
-  if (match){
-     fileName = match[1]
-     .trim()
-     .replace(/[\u0000-\u001F\u007F]/g, "")
- .replace(/[\\/*?:"<>|]/g, "_");
-  }
-}
+if (disposition) { 
+  // Primero intenta filename* (RFC 5987) 
+  let match = disposition.match(/filename\*\=utf-8''(.+)/i);
+   if (match) {
+     fileName = decodeURIComponent(match[1]);
+     } else {
+       // Si no existe filename*, usa filename clásico 
+       match = disposition.match(/filename="?([^"]+)"?/); 
+       if (match) {
+         fileName = match[1];
+         } 
+        } 
+        // Sanitiza caracteres inválidos
+       fileName = fileName.trim().replace(/[\\/*?:"<>|]/g, "_"); }
 
 
       const mimeType = formato.value === "mp3" ? "audio/mpeg" : "video/mp4"; 
