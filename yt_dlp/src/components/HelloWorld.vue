@@ -37,7 +37,7 @@
 let fileName = 'descarga.mp3';
 if (disposition) {
   const match = disposition.match(/filename="?(.+)"?/);
-  if (match) fileName = match[1];
+  if (match) fileName = match[1].trim();
 }
 
 
