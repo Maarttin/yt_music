@@ -79,7 +79,7 @@ def download_video(url: str, formato: str):
             "format": "bestvideo+bestaudio",
             "merge_output_format": "mp4",  # fuerza salida mp4
             "outtmpl": ruta,
-            "postprocessors": [{ "key": "FFmpegVideoConvertor"}]
+            "postprocessors": [{ "key": "FFmpegVideoConvertor", "preferedformat": "mp4" },{"key": "FFmpegAudioReencoder", "preferredcodec": "aac"}]
         }
 
 
