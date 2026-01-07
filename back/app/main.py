@@ -1,3 +1,4 @@
+from fileinput import filename
 from fastapi import HTTPException
 
 from fastapi import FastAPI, Query
@@ -79,12 +80,11 @@ def download_video(url: str, formato: str):
         info = ydl.extract_info(url, download=True)
         real_title = info.get("title", "cancion") 
         ext = "mp3" if formato == "mp3" else info.get("ext", "mp4")
-        filename = f"/tmp/{real_title}.{ext}"
+        filename = ydl.prepare_filename(info)
         if formato == "mp3":
-            filename = os.path.splitext(ydl.prepare_filename(info))[0] + ".mp3"
-
-    print("Título detectado:", info.get("title"), flush=True)
-    print("Archivo generado:", filename, flush=True)
+           filename = os.path.splitext(filename)[0] + ".mp3"
+    print("prepare_filename:", ydl.prepare_filename(info), flush=True)
+    print("final filename:", filename, flush=True)
 
     if not os.path.exists(filename):
         raise HTTPException(status_code=500, detail="Archivo no generado")
