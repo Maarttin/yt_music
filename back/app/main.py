@@ -10,7 +10,7 @@ import yt_dlp
 import os
 import platform
 import uvicorn
-
+import re
 app = FastAPI()
 
 app.add_middleware(
@@ -93,11 +93,13 @@ def download_video(url: str, formato: str):
 
     if not os.path.exists(filename):
         raise HTTPException(status_code=500, detail="Archivo no generado")
-
+    safe_name = os.path.basename(filename)
+    safe_name = safe_name.strip()
+    safe_name = re.sub(r'[\\/*?:"<>|]', "_", safe_name)
     return FileResponse(
         filename,
         media_type="audio/mpeg" if formato == "mp3" else "video/mp4",
-        filename=os.path.basename(filename)
+        filename=safe_name
     )
 
 if __name__ == "__main__": 
