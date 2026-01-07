@@ -15,7 +15,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://mymusica.netlify.app", "http://localhost:5173", "https://maarttin.github.io/yt_music/"],
+    allow_origins=["https://mymusica.netlify.app", "http://localhost:5173", "https://maarttin.github.io/yt_music"],
     
     allow_credentials=True,
     allow_methods=["*"],
