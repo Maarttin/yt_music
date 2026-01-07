@@ -1,3 +1,4 @@
+from http.client import HTTPException
 from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -58,35 +59,33 @@ def get_video(url: str = Query(..., description="URL video")):
 
 @app.get("/download")
 def download_video(url: str, formato: str):
-    ruta = os.path.join("/tmp", "%(title)s.%(ext)s")  # usa /tmp en Railway
-    if formato == "mp3":
-        opciones = {
-            "format": "bestaudio/best",
-            "outtmpl": ruta,
-            "postprocessors": [{
-                "key": "FFmpegExtractAudio",
-                "preferredcodec": "mp3",
-                "preferredquality": "192",
-            }]
-        }
-    else:
-        opciones = {
-            "format": "bestvideo+bestaudio[ext=m4a]/best[ext=mp4]",
-            "outtmpl": ruta
-        }
-        
-    if not url.startswith("http://") and not url.startswith("https://"):
-        url= f"ytsearch1:{url}"
-    
-    print("url", url, flush=True)
+    ruta = "/tmp/%(title)s.%(ext)s"
 
-    
+    opciones = {
+        "format": "bestaudio/best" if formato == "mp3" else "bestvideo+bestaudio/best",
+        "outtmpl": ruta,
+        "postprocessors": [{
+            "key": "FFmpegExtractAudio",
+            "preferredcodec": "mp3",
+            "preferredquality": "192",
+        }] if formato == "mp3" else []
+    }
+
+    if not url.startswith("http://") and not url.startswith("https://"):
+        url = f"ytsearch1:{url}"
 
     with yt_dlp.YoutubeDL(opciones) as ydl:
         info = ydl.extract_info(url, download=True)
         filename = ydl.prepare_filename(info)
         if formato == "mp3":
             filename = os.path.splitext(filename)[0] + ".mp3"
+
+    print("Título detectado:", info.get("title"), flush=True)
+    print("Archivo generado:", filename, flush=True)
+
+    if not os.path.exists(filename):
+        raise HTTPException(status_code=500, detail="Archivo no generado")
+
     return FileResponse(
         filename,
         media_type="audio/mpeg" if formato == "mp3" else "video/mp4",
