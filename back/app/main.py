@@ -77,8 +77,9 @@ def download_video(url: str, formato: str):
     else:
         opciones = {
             "format": "bestvideo+bestaudio",
-            #"merge_output_format": "mp4",  # fuerza salida mp4
-            "outtmpl": ruta,"remux_video": "mp4",
+            "merge_output_format": "mp4",  # fuerza salida mp4
+            "outtmpl": ruta,
+            "remux_video": "mp4",
             "postprocessor_args": [
             "-c:a", "aac"
             ]
