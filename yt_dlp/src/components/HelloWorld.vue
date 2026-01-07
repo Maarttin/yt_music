@@ -85,11 +85,11 @@ URL.revokeObjectURL(enlace.href);
   <h2>Comienza buscando algún video por nombre o URL</h2>
 
 
-  <input type="text" v-model="url" placeholder="URL del video" />
-<button @click="buscarCancion">Buscar</button>
+  <input type="text" v-model="url" placeholder="URL o nombre del video" />
+  <button @click="buscarCancion">Buscar</button>
 
-<p v-if="resultado">Cancion encontrada: {{ resultado['title'] }}</p>
-<p v-if="errorMsg" style="color: red;">{{ errorMsg }}</p>
+  <p v-if="resultado">Cancion encontrada: {{ resultado['title'] }}</p>
+  <p v-if="errorMsg" style="color: red;">{{ errorMsg }}</p>
 
 
 
@@ -100,7 +100,7 @@ URL.revokeObjectURL(enlace.href);
       <option value="mp3">MP3</option>
     </select>
 
-    <button @click="descargarCancion">Descargar Canción</button>
+    <button @click="descargarCancion" >Descargar Canción</button>
   </div>
 
 
